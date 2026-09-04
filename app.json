@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "Yemek Sipariş Admin",
+    "slug": "yemeksiparisapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logo.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "android": {
+      "package": "com.mksanli.yemeksiparisapp",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logo.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c342e12a-8107-4fb3-84c2-df796d6a3213"
+      }
+    }
+  }
+}
