@@ -66,5 +66,6 @@ Madem bu kadar veri var. O zaman bir rapor görmek şart. Sipariş ekranında An
 Plastik Kutu ve Karton Torba Stoğu; teslim edilen siparişler içerisinde olan plastik kutu veya karton torba adedini hesaplayıp malzeme listesindeki toplam adetten düşerek bulunacak.
 
 Şimdi text dosyasının içine bir şeyler daha yazdım.
+2. denemede yazdıklarımı commit etmeyeceğim.
 
 
