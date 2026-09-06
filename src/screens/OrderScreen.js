@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Modal, Platform, Alert, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Modal, Platform, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useFocusEffect } from '@react-navigation/native';
@@ -352,266 +352,261 @@ export default function OrderScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* KeyboardAvoidingView eklenerek klavyenin metin kutularını kapatması engellendi */}
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-        style={{ flex: 1 }}
-      >
-        <ScrollView style={styles.padding} contentContainerStyle={{ paddingBottom: 100 }} keyboardShouldPersistTaps="handled">
-          <Text style={styles.headerTitle}>Sipariş Giriş & Takip Ekranı</Text>
+      <ScrollView style={styles.padding} contentContainerStyle={{ paddingBottom: 40 }}>
+        <Text style={styles.headerTitle}>Sipariş Giriş & Takip Ekranı</Text>
 
-          <View style={styles.topButtonsRow}>
-            <TouchableOpacity 
-              style={styles.topBackButton} 
-              onPress={() => navigation.navigate('Home')}
-            >
-              <Text style={styles.topBackButtonText}>← Ana Ekrana Dön</Text>
-            </TouchableOpacity>
+        {/* Üst Butonlar (Ana Ekrana Dön ve Durum Raporu) */}
+        <View style={styles.topButtonsRow}>
+          <TouchableOpacity 
+            style={styles.topBackButton} 
+            onPress={() => navigation.navigate('Home')}
+          >
+            <Text style={styles.topBackButtonText}>← Ana Ekrana Dön</Text>
+          </TouchableOpacity>
 
-            <TouchableOpacity 
-              style={styles.topReportButton} 
-              onPress={() => navigation.navigate('Report')}
-            >
-              <Text style={styles.topReportButtonText}>📊 Durum Raporu</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity 
+            style={styles.topReportButton} 
+            onPress={() => navigation.navigate('Report')}
+          >
+            <Text style={styles.topReportButtonText}>📊 Durum Raporu</Text>
+          </TouchableOpacity>
+        </View>
 
-          <Text style={styles.label}>Müşteri Adı Soyadı</Text>
-          <TextInput style={styles.input} placeholder="Örn: Ferda Derici" value={customerName} onChangeText={setCustomerName} />
+        <Text style={styles.label}>Müşteri Adı Soyadı</Text>
+        <TextInput style={styles.input} placeholder="Örn: Ferda Derici" value={customerName} onChangeText={setCustomerName} />
 
-          <View style={styles.rowBetween}>
-            <Text style={styles.sectionTitle}>Siparişe Konu Yemekler</Text>
-            <TouchableOpacity onPress={() => setShowAddMealModal(true)}>
-              <Text style={styles.addText}>+ Yeni Yemek Ekle</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.chipWrapContainer}>
-            {meals.map((m) => {
-              const hasRecipe = recipeMealIds.includes(m.id);
-              const isSelected = selectedMealId === m.id;
+        <View style={styles.rowBetween}>
+          <Text style={styles.sectionTitle}>Siparişe Konu Yemekler</Text>
+          <TouchableOpacity onPress={() => setShowAddMealModal(true)}>
+            <Text style={styles.addText}>+ Yeni Yemek Ekle</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.chipWrapContainer}>
+          {meals.map((m) => {
+            const hasRecipe = recipeMealIds.includes(m.id);
+            const isSelected = selectedMealId === m.id;
 
-              return (
-                <TouchableOpacity
-                  key={m.id}
-                  style={[
-                    styles.chip,
-                    isSelected && styles.selectedChip,
-                    !hasRecipe && styles.disabledChipStyle
-                  ]}
-                  disabled={!hasRecipe}
-                  onPress={() => setSelectedMealId(m.id)}
-                >
-                  <Text style={[
-                    styles.chipText,
-                    isSelected && styles.selectedChipText,
-                    !hasRecipe && styles.disabledChipText
-                  ]}>
-                    {String(m.meal_name || '')} {!hasRecipe ? ' (Reçetesi Yok)' : ''}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-
-          <Text style={styles.label}>İstenen Ölçü Birimi ve Miktar</Text>
-          <View style={styles.chipWrapContainer}>
-            {units.map((u) => (
+            return (
               <TouchableOpacity
-                key={u.id}
-                style={[styles.chipSmall, selectedUnitId === u.id && styles.selectedChip]}
-                onPress={() => setSelectedUnitId(u.id)}
+                key={m.id}
+                style={[
+                  styles.chip,
+                  isSelected && styles.selectedChip,
+                  !hasRecipe && styles.disabledChipStyle
+                ]}
+                disabled={!hasRecipe}
+                onPress={() => setSelectedMealId(m.id)}
               >
-                <Text style={[styles.chipText, selectedUnitId === u.id && styles.selectedChipText]}>{u.unit_symbol}</Text>
+                <Text style={[
+                  styles.chipText,
+                  isSelected && styles.selectedChipText,
+                  !hasRecipe && styles.disabledChipText
+                ]}>
+                  {String(m.meal_name || '')} {!hasRecipe ? ' (Reçetesi Yok)' : ''}
+                </Text>
               </TouchableOpacity>
+            );
+          })}
+        </View>
+
+        <Text style={styles.label}>İstenen Ölçü Birimi ve Miktar</Text>
+        <View style={styles.chipWrapContainer}>
+          {units.map((u) => (
+            <TouchableOpacity
+              key={u.id}
+              style={[styles.chipSmall, selectedUnitId === u.id && styles.selectedChip]}
+              onPress={() => setSelectedUnitId(u.id)}
+            >
+              <Text style={[styles.chipText, selectedUnitId === u.id && styles.selectedChipText]}>{u.unit_symbol}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <View style={styles.row}>
+          <TextInput style={[styles.input, { flex: 1, marginRight: 10 }]} placeholder="Miktar (Örn: 500)" keyboardType="numeric" value={currentQty} onChangeText={setCurrentQty} />
+          <TouchableOpacity style={styles.addBtn} onPress={handleAddOrderItem}>
+            <Text style={styles.addBtnText}>+ Siparişe Ekle</Text>
+          </TouchableOpacity>
+        </View>
+
+        {orderItems.map((item, index) => (
+          <View key={index} style={[styles.itemRow, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
+            <Text style={[styles.itemText, { flex: 1 }]}>
+              {item.meal_name} - {item.quantity} {item.unit_symbol} (Maliyet: {item.item_cost.toFixed(2)} TL | Satış: {item.item_sale.toFixed(2)} TL)
+            </Text>
+            <TouchableOpacity 
+              style={styles.removeItemButton} 
+              onPress={() => handleRemoveItem(index)}
+            >
+              <Text style={styles.removeItemText}>✖</Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+
+        {packagingList.length > 0 ? (
+          <View style={{ marginTop: 15 }}>
+            <Text style={styles.sectionTitle}>📦 Paketleme / Ambalaj Kullanımı</Text>
+            {packagingList.map((pkg) => (
+              <View key={pkg.id} style={styles.packagingInputRow}>
+                <Text style={{ flex: 1, fontSize: 14, color: '#333', fontWeight: '500' }}>
+                  {pkg.ingredient_name} ({pkg.unit_symbol || 'adet'})
+                </Text>
+                <TextInput
+                  style={styles.packagingInput}
+                  placeholder="Adet"
+                  keyboardType="numeric"
+                  value={selectedPackagings[pkg.id] || ''}
+                  onChangeText={(val) => handlePackagingQtyChange(pkg.id, val)}
+                />
+              </View>
             ))}
           </View>
+        ) : null}
 
-          <View style={styles.row}>
-            <TextInput style={[styles.input, { flex: 1, marginRight: 10 }]} placeholder="Miktar (Örn: 500)" keyboardType="numeric" value={currentQty} onChangeText={setCurrentQty} />
-            <TouchableOpacity style={styles.addBtn} onPress={handleAddOrderItem}>
-              <Text style={styles.addBtnText}>+ Siparişe Ekle</Text>
-            </TouchableOpacity>
+        <Text style={styles.label}>Teslim Tarihi</Text>
+        <TouchableOpacity style={styles.datePickerBtn} onPress={() => setShowDatePicker(true)}>
+          <Text style={styles.datePickerText}>{deliveryDate.toISOString().split('T')[0]}</Text>
+        </TouchableOpacity>
+        {showDatePicker ? (
+          <DateTimePicker value={deliveryDate} mode="date" display="default" onChange={onDateChange} />
+        ) : null}
+
+        <Text style={styles.label}>
+          <Text>Teslim Saati: </Text>
+          <Text style={styles.selectedTimeText}>{selectedHour + ':' + selectedMinute}</Text>
+        </Text>
+        
+        <View style={styles.row}>
+          <TouchableOpacity 
+            style={[styles.dropdownBtn, { flex: 1, marginRight: 5 }]} 
+            onPress={() => { setShowHourPicker(!showHourPicker); setShowMinutePicker(false); }}
+          >
+            <Text style={styles.dropdownBtnText}>⏰ Saat: {selectedHour}:00 {showHourPicker ? '▲' : '▼'}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={[styles.dropdownBtn, { flex: 1, marginLeft: 5 }]} 
+            onPress={() => { setShowMinutePicker(!showMinutePicker); setShowHourPicker(false); }}
+          >
+            <Text style={styles.dropdownBtnText}>⏱️ Dakika: :{selectedMinute} {showMinutePicker ? '▲' : '▼'}</Text>
+          </TouchableOpacity>
+        </View>
+
+        {showHourPicker ? (
+          <View style={styles.expandableHourContainer}>
+            <Text style={styles.subLabel}>Saati Yana Kaydırarak Seçin:</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={true} style={styles.timeScrollRow}>
+              {hoursList.map((h) => (
+                <TouchableOpacity
+                  key={h}
+                  style={[styles.timeChip, selectedHour === h && styles.selectedTimeChip]}
+                  onPress={() => { setSelectedHour(h); setShowHourPicker(false); }}
+                >
+                  <Text style={[styles.timeChipText, selectedHour === h && styles.selectedTimeChipText]}>{h + ':00'}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
           </View>
+        ) : null}
 
-          {orderItems.map((item, index) => (
-            <View key={index} style={[styles.itemRow, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
-              <Text style={[styles.itemText, { flex: 1 }]}>
-                {item.meal_name} - {item.quantity} {item.unit_symbol} (Maliyet: {item.item_cost.toFixed(2)} TL | Satış: {item.item_sale.toFixed(2)} TL)
-              </Text>
-              <TouchableOpacity 
-                style={styles.removeItemButton} 
-                onPress={() => handleRemoveItem(index)}
-              >
-                <Text style={styles.removeItemText}>✖</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
-
-          {packagingList.length > 0 ? (
-            <View style={{ marginTop: 15 }}>
-              <Text style={styles.sectionTitle}>📦 Paketleme / Ambalaj Kullanımı</Text>
-              {packagingList.map((pkg) => (
-                <View key={pkg.id} style={styles.packagingInputRow}>
-                  <Text style={{ flex: 1, fontSize: 14, color: '#333', fontWeight: '500' }}>
-                    {pkg.ingredient_name} ({pkg.unit_symbol || 'adet'})
-                  </Text>
-                  <TextInput
-                    style={styles.packagingInput}
-                    placeholder="Adet"
-                    keyboardType="numeric"
-                    value={selectedPackagings[pkg.id] || ''}
-                    onChangeText={(val) => handlePackagingQtyChange(pkg.id, val)}
-                  />
-                </View>
+        {showMinutePicker ? (
+          <View style={styles.expandableHourContainer}>
+            <Text style={styles.subLabel}>Dakikayı Seçin:</Text>
+            <View style={styles.chipWrapContainer}>
+              {minutesList.map((m) => (
+                <TouchableOpacity
+                  key={m}
+                  style={[styles.timeChip, selectedMinute === m && styles.selectedTimeChip]}
+                  onPress={() => { setSelectedMinute(m); setShowMinutePicker(false); }}
+                >
+                  <Text style={[styles.timeChipText, selectedMinute === m && styles.selectedTimeChipText]}>{':' + m}</Text>
+                </TouchableOpacity>
               ))}
             </View>
-          ) : null}
-
-          <Text style={styles.label}>Teslim Tarihi</Text>
-          <TouchableOpacity style={styles.datePickerBtn} onPress={() => setShowDatePicker(true)}>
-            <Text style={styles.datePickerText}>{deliveryDate.toISOString().split('T')[0]}</Text>
-          </TouchableOpacity>
-          {showDatePicker ? (
-            <DateTimePicker value={deliveryDate} mode="date" display="default" onChange={onDateChange} />
-          ) : null}
-
-          <Text style={styles.label}>
-            <Text>Teslim Saati: </Text>
-            <Text style={styles.selectedTimeText}>{selectedHour + ':' + selectedMinute}</Text>
-          </Text>
-          
-          <View style={styles.row}>
-            <TouchableOpacity 
-              style={[styles.dropdownBtn, { flex: 1, marginRight: 5 }]} 
-              onPress={() => { setShowHourPicker(!showHourPicker); setShowMinutePicker(false); }}
-            >
-              <Text style={styles.dropdownBtnText}>⏰ Saat: {selectedHour}:00 {showHourPicker ? '▲' : '▼'}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={[styles.dropdownBtn, { flex: 1, marginLeft: 5 }]} 
-              onPress={() => { setShowMinutePicker(!showMinutePicker); setShowHourPicker(false); }}
-            >
-              <Text style={styles.dropdownBtnText}>⏱️ Dakika: :{selectedMinute} {showMinutePicker ? '▲' : '▼'}</Text>
-            </TouchableOpacity>
           </View>
+        ) : null}
 
-          {showHourPicker ? (
-            <View style={styles.expandableHourContainer}>
-              <Text style={styles.subLabel}>Saati Yana Kaydırarak Seçin:</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={true} style={styles.timeScrollRow}>
-                {hoursList.map((h) => (
-                  <TouchableOpacity
-                    key={h}
-                    style={[styles.timeChip, selectedHour === h && styles.selectedTimeChip]}
-                    onPress={() => { setSelectedHour(h); setShowHourPicker(false); }}
-                  >
-                    <Text style={[styles.timeChipText, selectedHour === h && styles.selectedTimeChipText]}>{h + ':00'}</Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
-          ) : null}
+        <Text style={styles.label}>Sipariş Notu / Özel İstekler</Text>
+        <TextInput style={[styles.input, { height: 60 }]} multiline placeholder="Örn: Sosu ayrı paketlensin" value={notes} onChangeText={setNotes} />
 
-          {showMinutePicker ? (
-            <View style={styles.expandableHourContainer}>
-              <Text style={styles.subLabel}>Dakikayı Seçin:</Text>
-              <View style={styles.chipWrapContainer}>
-                {minutesList.map((m) => (
-                  <TouchableOpacity
-                    key={m}
-                    style={[styles.timeChip, selectedMinute === m && styles.selectedTimeChip]}
-                    onPress={() => { setSelectedMinute(m); setShowMinutePicker(false); }}
-                  >
-                    <Text style={[styles.timeChipText, selectedMinute === m && styles.selectedTimeChipText]}>{':' + m}</Text>
-                  </TouchableOpacity>
+        <TouchableOpacity style={styles.saveButton} onPress={handleSaveOrder}>
+          <Text style={styles.saveButtonText}>Siparişi Kaydet (Hazırlanıyor)</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.sectionTitle}>Sipariş Takip & Arşiv</Text>
+        <View style={styles.tabContainer}>
+          <TouchableOpacity style={[styles.tab, activeTab === 'pending' && styles.activeTab]} onPress={() => setActiveTab('pending')}>
+            <Text style={[styles.tabText, activeTab === 'pending' && styles.activeTabText]}>Hazırlanıyor ({orders.filter(o => o.status === 'pending').length})</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.tab, activeTab === 'completed' && styles.activeTab]} onPress={() => setActiveTab('completed')}>
+            <Text style={[styles.tabText, activeTab === 'completed' && styles.activeTabText]}>Teslim Edildi ({orders.filter(o => o.status === 'completed').length})</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.tab, activeTab === 'canceled' && styles.activeTab]} onPress={() => setActiveTab('canceled')}>
+            <Text style={[styles.tabText, activeTab === 'canceled' && styles.activeTabText]}>İptal ({orders.filter(o => o.status === 'canceled').length})</Text>
+          </TouchableOpacity>
+        </View>
+
+        {filteredOrders.length === 0 ? (
+          <Text style={styles.emptyText}>Bu kategoride henüz kayıtlı sipariş bulunmuyor.</Text>
+        ) : (
+          filteredOrders.map((order) => {
+            const itemsCost = order.items ? order.items.reduce((sum, i) => sum + (i.item_cost || 0), 0) : 0;
+            const packagingsCost = order.packagings ? order.packagings.reduce((sum, p) => sum + (p.total_packaging_cost || 0), 0) : 0;
+            const totalOrderCost = itemsCost + packagingsCost;
+            
+            const totalOrderSale = order.items ? order.items.reduce((sum, i) => sum + (i.item_sale || 0), 0) : 0;
+            const netProfit = totalOrderSale - totalOrderCost;
+
+            return (
+              <View key={order.id} style={styles.orderCard}>
+                <Text style={styles.orderCustomer}>{order.customer_name}</Text>
+                <Text style={styles.orderDetail}>Teslim: {order.delivery_datetime}</Text>
+                {order.notes ? <Text style={styles.orderNotes}>Not: {order.notes}</Text> : null}
+
+                {order.items && order.items.map((it, idx) => (
+                  <Text key={idx} style={styles.orderItemBullet}>• {it.meal_name} ({it.quantity} {it.unit_symbol})</Text>
                 ))}
+
+                {order.packagings && order.packagings.length > 0 ? (
+                  <View style={{ marginTop: 4, marginLeft: 5 }}>
+                    {order.packagings.map((pkg, pIdx) => (
+                      <Text key={`pkg-${pIdx}`} style={{ fontSize: 12, color: '#555', fontStyle: 'italic' }}>
+                        📦 {pkg.ingredient_name}: {pkg.quantity_used} adet ({pkg.total_packaging_cost.toFixed(2)} TL)
+                      </Text>
+                    ))}
+                  </View>
+                ) : null}
+
+                <Text style={styles.totalCostText}>
+                  <Text>Toplam Üretim Maliyeti: </Text>
+                  <Text style={{ color: '#2E7D32' }}>{totalOrderCost.toFixed(2)} TL</Text>
+                </Text>
+                <Text style={styles.totalSaleText}>
+                  <Text>Toplam Satış Tutarı: </Text>
+                  <Text style={{ color: '#C62828' }}>{totalOrderSale.toFixed(2)} TL</Text>
+                </Text>
+                <Text style={styles.netProfitText}>
+                  <Text>Net Kâr: </Text>
+                  <Text style={{ color: netProfit >= 0 ? '#1976D2' : '#D32F2F', fontWeight: 'bold' }}>
+                    {netProfit.toFixed(2)} TL
+                  </Text>
+                </Text>
+
+                {order.status === 'pending' ? (
+                  <View style={styles.orderActions}>
+                    <TouchableOpacity style={styles.completeBtn} onPress={() => handleUpdateStatus(order.id, 'completed')}>
+                      <Text style={styles.btnText}>✓ Teslim Edildi</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.cancelBtn} onPress={() => handleUpdateStatus(order.id, 'canceled')}>
+                      <Text style={styles.btnText}>X İptal Et</Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : null}
               </View>
-            </View>
-          ) : null}
-
-          <Text style={styles.label}>Sipariş Notu / Özel İstekler</Text>
-          <TextInput style={[styles.input, { height: 60 }]} multiline placeholder="Örn: Sosu ayrı paketlensin" value={notes} onChangeText={setNotes} />
-
-          <TouchableOpacity style={styles.saveButton} onPress={handleSaveOrder}>
-            <Text style={styles.saveButtonText}>Siparişi Kaydet (Hazırlanıyor)</Text>
-          </TouchableOpacity>
-
-          <Text style={styles.sectionTitle}>Sipariş Takip & Arşiv</Text>
-          <View style={styles.tabContainer}>
-            <TouchableOpacity style={[styles.tab, activeTab === 'pending' && styles.activeTab]} onPress={() => setActiveTab('pending')}>
-              <Text style={[styles.tabText, activeTab === 'pending' && styles.activeTabText]}>Hazırlanıyor ({orders.filter(o => o.status === 'pending').length})</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.tab, activeTab === 'completed' && styles.activeTab]} onPress={() => setActiveTab('completed')}>
-              <Text style={[styles.tabText, activeTab === 'completed' && styles.activeTabText]}>Teslim Edildi ({orders.filter(o => o.status === 'completed').length})</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.tab, activeTab === 'canceled' && styles.activeTab]} onPress={() => setActiveTab('canceled')}>
-              <Text style={[styles.tabText, activeTab === 'canceled' && styles.activeTabText]}>İptal ({orders.filter(o => o.status === 'canceled').length})</Text>
-            </TouchableOpacity>
-          </View>
-
-          {filteredOrders.length === 0 ? (
-            <Text style={styles.emptyText}>Bu kategoride henüz kayıtlı sipariş bulunmuyor.</Text>
-          ) : (
-            filteredOrders.map((order) => {
-              const itemsCost = order.items ? order.items.reduce((sum, i) => sum + (i.item_cost || 0), 0) : 0;
-              const packagingsCost = order.packagings ? order.packagings.reduce((sum, p) => sum + (p.total_packaging_cost || 0), 0) : 0;
-              const totalOrderCost = itemsCost + packagingsCost;
-              
-              const totalOrderSale = order.items ? order.items.reduce((sum, i) => sum + (i.item_sale || 0), 0) : 0;
-              const netProfit = totalOrderSale - totalOrderCost;
-
-              return (
-                <View key={order.id} style={styles.orderCard}>
-                  <Text style={styles.orderCustomer}>{order.customer_name}</Text>
-                  <Text style={styles.orderDetail}>Teslim: {order.delivery_datetime}</Text>
-                  {order.notes ? <Text style={styles.orderNotes}>Not: {order.notes}</Text> : null}
-
-                  {order.items && order.items.map((it, idx) => (
-                    <Text key={idx} style={styles.orderItemBullet}>• {it.meal_name} ({it.quantity} {it.unit_symbol})</Text>
-                  ))}
-
-                  {order.packagings && order.packagings.length > 0 ? (
-                    <View style={{ marginTop: 4, marginLeft: 5 }}>
-                      {order.packagings.map((pkg, pIdx) => (
-                        <Text key={`pkg-${pIdx}`} style={{ fontSize: 12, color: '#555', fontStyle: 'italic' }}>
-                          📦 {pkg.ingredient_name}: {pkg.quantity_used} adet ({pkg.total_packaging_cost.toFixed(2)} TL)
-                        </Text>
-                      ))}
-                    </View>
-                  ) : null}
-
-                  <Text style={styles.totalCostText}>
-                    <Text>Toplam Üretim Maliyeti: </Text>
-                    <Text style={{ color: '#2E7D32' }}>{totalOrderCost.toFixed(2)} TL</Text>
-                  </Text>
-                  <Text style={styles.totalSaleText}>
-                    <Text>Toplam Satış Tutarı: </Text>
-                    <Text style={{ color: '#C62828' }}>{totalOrderSale.toFixed(2)} TL</Text>
-                  </Text>
-                  <Text style={styles.netProfitText}>
-                    <Text>Net Kâr: </Text>
-                    <Text style={{ color: netProfit >= 0 ? '#1976D2' : '#D32F2F', fontWeight: 'bold' }}>
-                      {netProfit.toFixed(2)} TL
-                    </Text>
-                  </Text>
-
-                  {order.status === 'pending' ? (
-                    <View style={styles.orderActions}>
-                      <TouchableOpacity style={styles.completeBtn} onPress={() => handleUpdateStatus(order.id, 'completed')}>
-                        <Text style={styles.btnText}>✓ Teslim Edildi</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity style={styles.cancelBtn} onPress={() => handleUpdateStatus(order.id, 'canceled')}>
-                        <Text style={styles.btnText}>X İptal Et</Text>
-                      </TouchableOpacity>
-                    </View>
-                  ) : null}
-                </View>
-              );
-            })
-          )}
-        </ScrollView>
-      </KeyboardAvoidingView>
+            );
+          })
+        )}
+      </ScrollView>
 
       <Modal visible={showAddMealModal} transparent animationType="slide">
         <View style={styles.modalOverlay}>
