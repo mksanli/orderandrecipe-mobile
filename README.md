@@ -1,8 +1,4 @@
 # orderandrecipe-mobile
 This repository includes my first mobile app development trial. 
 
-<p align="center">
-  <video src="./assets/videos/cost_screen.mp4" width="300" controls autoplay loop muted></video>
-  <video src="./assets/videos/order_screen.mp4" width="300" controls autoplay loop muted></video>
-  <video src="./assets/videos/recipe_screen.mp4" width="300" controls autoplay loop muted></video>
-</p>
+[![Order and Recipe mobile app introduction video thumbnail](https://img.youtube.com/vi/VIVERO_IDSI/0.jpg)](https://drive.google.com/drive/folders/1SGtd28irvOy7SE-D654H35rEFSxccFnA?usp=drive_link)
